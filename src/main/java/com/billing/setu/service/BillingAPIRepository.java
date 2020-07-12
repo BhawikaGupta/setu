@@ -46,6 +46,9 @@ public class BillingAPIRepository {
                 }
 
                 if(Objects.equals(customer.getDueAmount(), "0")) {
+                    if (! customer.getAmountPaid().equals(paymentUpdateRequest.getTransaction().getAmountPaid())) {
+                        throw new AmountMisMatchException("Amount Mismatch");
+                    }
                     PaymentResponse paymentResponse = new PaymentResponse(customer.getAckID());
                     return new PaymentUpdateResponse("SUCCESS", paymentResponse);
                 }
