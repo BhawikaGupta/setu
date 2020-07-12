@@ -61,8 +61,8 @@ public class APISecurityConfig extends WebSecurityConfigurerAdapter {
                     response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
                 });
 
-        httpSecurity.requiresChannel()
+        /*httpSecurity.requiresChannel()
                     .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
-                    .requiresSecure();
+                    .requiresSecure();*/
     }
 }
