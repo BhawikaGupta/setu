@@ -61,4 +61,12 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         ErrorResponse errorResponse = new ErrorResponse("ERROR", "path-not-found");
         return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.NOT_FOUND);
     }
+
+    @ResponseBody
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public final ResponseEntity<ErrorResponse> badRequest(Exception ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse("ERROR", "invalid-api-parameters");
+        return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 }
