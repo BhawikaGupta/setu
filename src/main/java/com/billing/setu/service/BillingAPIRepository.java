@@ -5,8 +5,6 @@ import com.billing.setu.exception.EntityNotFoundException;
 import com.billing.setu.exception.InvalidRefIdException;
 import com.billing.setu.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -35,7 +33,7 @@ public class BillingAPIRepository {
             billResponse.setRefID(customer.getRefID());
             return billResponse;
         }
-        throw new EntityNotFoundException("");
+        throw new EntityNotFoundException("Customer not found");
     }
 
     public PaymentUpdateResponse updatePayment(PaymentUpdateRequest paymentUpdateRequest) {
@@ -44,7 +42,7 @@ public class BillingAPIRepository {
             if (customer.getRefID().equals(paymentUpdateRequest.getRefID())) {
                 if(!StringUtils.isEmpty(customer.getId())
                         && (!customer.getId().equals(paymentUpdateRequest.getTransaction().getId()))) {
-                    throw new InvalidRefIdException("");
+                    throw new InvalidRefIdException("Reference id doesn't match");
                 }
 
                 if(Objects.equals(customer.getDueAmount(), "0")) {
@@ -55,7 +53,7 @@ public class BillingAPIRepository {
                 if(!customer.getDueAmount().equals(paymentUpdateRequest.getTransaction().getAmountPaid())
                         || ( ! StringUtils.isEmpty(customer.getAmountPaid()) &&
                                 !customer.getAmountPaid().equals(paymentUpdateRequest.getTransaction().getAmountPaid()))) {
-                    throw new AmountMisMatchException("");
+                    throw new AmountMisMatchException("Amount Mismatch");
                 }
                 customer.setAmountPaid(paymentUpdateRequest.getTransaction().getAmountPaid());
                 customer.setDate(paymentUpdateRequest.getTransaction().getDate());
@@ -68,7 +66,7 @@ public class BillingAPIRepository {
                 return new PaymentUpdateResponse("SUCCESS", paymentResponse);
             }
         }
-        throw new InvalidRefIdException("");
+        throw new InvalidRefIdException("Ref id not found");
     }
 
 }

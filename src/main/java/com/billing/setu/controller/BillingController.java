@@ -39,12 +39,12 @@ public class BillingController {
     ResponseEntity<?> fetchBill(@RequestBody Map<String, String> payload) throws Exception {
             String phoneNumber = payload.get("mobileNumber");
             if (phoneNumber == null || phoneNumber.isEmpty()) {
-                throw new BadRequestException("");
+                throw new BadRequestException("Invalid request");
             }
             BillResponse billResponse = repository.fetch(phoneNumber);
             if (billResponse == null) {
                 ErrorResponse errorResponse = new ErrorResponse("ERROR", "customer-not-found");
-                throw new EntityNotFoundException("");
+                throw new EntityNotFoundException("Customer not found");
             }
             BillingResponseEntity billingResponseEntity = new BillingResponseEntity("SUCCESS", billResponse);
             return new ResponseEntity<>(billingResponseEntity, HttpStatus.OK);
@@ -63,18 +63,18 @@ public class BillingController {
             value = "/api/v1/payment-update",
             method = POST,
             headers = "Accept=application/json")
-    ResponseEntity<?> paymentUpdate(@RequestBody PaymentUpdateRequest paymentUpdateRequest) throws Exception{
+    ResponseEntity<?> paymentUpdate(@RequestBody PaymentUpdateRequest paymentUpdateRequest) throws Exception {
         if(paymentUpdateRequest == null || ObjectUtils.isEmpty(paymentUpdateRequest)) {
-            throw new BadRequestException("");
+            throw new BadRequestException("Invalid request");
         }
         if(StringUtils.isEmpty(paymentUpdateRequest.getRefID())
                 || ObjectUtils.isEmpty(paymentUpdateRequest.getTransaction())) {
-            throw new BadRequestException("");
+            throw new BadRequestException("Invalid request");
         }
         if(StringUtils.isEmpty(paymentUpdateRequest.getTransaction().getAmountPaid())
                 || StringUtils.isEmpty(paymentUpdateRequest.getTransaction().getDate())
                 || StringUtils.isEmpty(paymentUpdateRequest.getTransaction().getId())) {
-            throw new BadRequestException("");
+            throw new BadRequestException("Invalid request");
         }
         PaymentUpdateResponse paymentUpdateResponse =  repository.updatePayment(paymentUpdateRequest);
         return new ResponseEntity<>(paymentUpdateResponse, HttpStatus.OK);
