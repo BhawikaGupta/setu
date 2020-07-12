@@ -61,6 +61,10 @@ public class APISecurityConfig extends WebSecurityConfigurerAdapter {
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                     response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
                 });
+        httpSecurity
+                .requiresChannel()
+                .anyRequest()
+                .requiresSecure();
     }
 
 }
