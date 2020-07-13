@@ -1,6 +1,7 @@
 package com.billing.setu.service;
 
 import com.billing.setu.exception.AmountMisMatchException;
+import com.billing.setu.exception.BadRequestException;
 import com.billing.setu.exception.EntityNotFoundException;
 import com.billing.setu.exception.InvalidRefIdException;
 import com.billing.setu.model.*;
@@ -22,6 +23,9 @@ public class BillingAPIRepository {
     private CustomerRepository customerRepository;
 
     public BillResponse fetch(String mobileNumber) {
+        if (mobileNumber.length() != 10) {
+            throw new BadRequestException("Number not valid");
+        }
         BigInteger number = new BigInteger(mobileNumber);
         Optional<Customer> response = customerRepository.findById(number);
         if (response.isPresent()) {
